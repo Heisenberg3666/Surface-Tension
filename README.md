@@ -1,8 +1,8 @@
 # Surface Tension
-Originally created by Holmium67, being maintained by Heisenberg3666.
+Currently being maintained by Heisenberg3666, originally made by Holmium67.
 
 ## Description
-When the nuclear warhead in the site is detonated and not everyone is dead yet, this plugin will wait a given amount of time and then start ticking their health down until they die. All times are configurable and damage is configurable. Damage can either be by number or percent.
+On detonation of the Alpha Warhead, radiation is emitted from the facility and will slowly kill the remaining people. All the times and announcements are configurable.
 
 ## Config Settings:
 Config:

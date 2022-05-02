@@ -1,4 +1,6 @@
 # Surface Tension
+[![Github All Releases](https://img.shields.io/github/downloads/Heisenberg3666/Surface-Tension/total.svg)]()
+
 Currently being maintained by Heisenberg3666, originally made by Holmium67.
 
 ## Description

@@ -18,18 +18,18 @@ namespace Surface_Tension
                 Team = Team.SCP,
                 Delay = 1f,
                 Damage = 10,
-                IsPercent = false
+                IsPercent = false,
+                Interval = 2
             },
             new TeamDamage()
             {
                 Team = Team.MTF,
                 Delay = 2f,
                 Damage = 5,
-                IsPercent = true
+                IsPercent = true,
+                Interval = 1
             }
         };
-
-        public float DamageInterval { get; set; } = 2.5f;
 
         public IEnumerable<TeamAnnouncement> AnnouncementConfig { get; private set; } = new List<TeamAnnouncement>()
         {

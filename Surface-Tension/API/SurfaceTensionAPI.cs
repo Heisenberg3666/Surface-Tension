@@ -1,100 +1,65 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using MEC;
+using Surface_Tension.API.Entities;
 using Surface_Tension.API.Enums;
-using Surface_Tension.Configs;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Surface_Tension.API
 {
-    public static class SurfaceTensionAPI
+    public class SurfaceTensionAPI
     {
-        public static bool IsDetonated = false;
-        public static BaseConfig Config = Plugin.Instance.Config;
+        public bool IsDetonated = false;
 
-        public static void Announce()
+        public void AnnounceRadiation(Team team)
         {
-            if (Config.Announcement.AnnouncementType == AnnouncementType.None)
+            TeamAnnouncement announcement = Plugin.Instance.Config.AnnouncementConfig.FirstOrDefault(x => x.Team == team);
+
+            if (announcement == null ||
+                team == Team.RIP)
                 return;
 
-            if (Config.Announcement.AnnouncementType.HasFlag(AnnouncementType.Cassie))
-            {
-                if (Config.Announcement.CassieDetonation.CassieTime == -1f)
+            if (announcement.AnnouncementType.HasFlag(AnnouncementType.Cassie) &&
+                !string.IsNullOrEmpty(announcement.AnnouncementCassie) &&
+                !string.IsNullOrEmpty(announcement.AnnouncementSubtitle))
+                Timing.CallDelayed(announcement.Delay, () =>
                 {
-                    Cassie.MessageTranslated(Config.Announcement.CassieDetonation.CassieText, Config.Announcement.CassieDetonation.CassieSubtitles);
-                    Log.Debug("Created CASSIE announcement.", Config.DebugMode);
-                }
-                else
+                    Cassie.MessageTranslated(announcement.AnnouncementCassie, announcement.AnnouncementSubtitle);
+                });
+            else if (announcement.AnnouncementType.HasFlag(AnnouncementType.Cassie) &&
+                !string.IsNullOrEmpty(announcement.AnnouncementCassie))
+                Timing.CallDelayed(announcement.Delay, () =>
                 {
-                    Timing.CallDelayed(Mathf.Clamp(Config.Announcement.CassieDetonation.CassieTime, 0.5f, 300f), () =>
-                    {
-                        Cassie.MessageTranslated(Config.Announcement.CassieDetonation.CassieText, Config.Announcement.CassieDetonation.CassieSubtitles);
-                        Log.Debug("Created CASSIE announcement.", Config.DebugMode);
-                    });
-                }
-            }
+                    Cassie.Message(announcement.AnnouncementCassie);
+                });
 
-            if (Config.Announcement.AnnouncementType.HasFlag(AnnouncementType.Hint))
-            {
+            if (announcement.AnnouncementType.HasFlag(AnnouncementType.Broadcast) &&
+                !string.IsNullOrEmpty(announcement.AnnouncementSubtitle))
                 foreach (Player player in Player.List)
-                {
-                    if (Config.Announcement.HintDetonation.HintTime == -1f)
-                    {
-                        player.ShowHint(Config.Announcement.HintDetonation.HintText, 10f);
-                    }
-                    else
-                    {
-                        Timing.CallDelayed(Config.Announcement.HintDetonation.HintTime, () =>
-                        {
-                            player.ShowHint(Config.Announcement.HintDetonation.HintText, 10f);
-                        });
-                    }
-                }
-                Log.Debug("Created Hint announcement.", Config.DebugMode);
-            }
+                    player.Broadcast(announcement.DisplayFor, announcement.AnnouncementSubtitle);
 
-            if (Config.Announcement.AnnouncementType.HasFlag(AnnouncementType.Broadcast))
-            {
+            if (announcement.AnnouncementType.HasFlag(AnnouncementType.Hint) &&
+                !string.IsNullOrEmpty(announcement.AnnouncementSubtitle))
                 foreach (Player player in Player.List)
-                {
-                    if (Config.Announcement.BroadcastDetonation.BroadcastTime == -1f)
-                    {
-                        player.Broadcast(10, Config.Announcement.BroadcastDetonation.BroadcastText);
-                    }
-                    else
-                    {
-                        Timing.CallDelayed(Config.Announcement.BroadcastDetonation.BroadcastTime, () =>
-                        {
-                            player.Broadcast(10, Config.Announcement.BroadcastDetonation.BroadcastText);
-                        });
-                    }
-                }
-                Log.Debug("Created Broadcast announcement.", Config.DebugMode);
-            }
+                    player.ShowHint(announcement.AnnouncementSubtitle, announcement.DisplayFor);
         }
 
-        public static float DamageCalculation(Player player)
+        public float DamageCalculation(Player player)
         {
-            if (player.Role.Side == Side.Scp) {
-                if (Config.Damage.DamageIsPercent)
-                    return (player.MaxHealth / 100) * Config.Damage.DamageScp;
-                return Config.Damage.DamageScp;
-            }
-            else
-            {
-                if (Config.Damage.DamageIsPercent)
-                    return (player.MaxHealth / 100) * Config.Damage.DamagePlayer;
-                return Config.Damage.DamagePlayer;
-            }
+            TeamDamage damage = Plugin.Instance.Config.DamageConfig.FirstOrDefault(x => x.Team == player.Role.Team);
+
+            if (damage.IsPercent)
+                return (player.MaxHealth / 100) * damage.Damage;
+            return damage.Damage;
         }
 
-        public static IEnumerator<float> DealPlayerDamage()
+        public IEnumerator<float> DealTeamDamage(Team team)
         {
+            TeamDamage damage = Plugin.Instance.Config.DamageConfig.FirstOrDefault(x => x.Team == team);
+
             while (true)
             {
-                foreach (Player player in Player.List)
+                foreach (Player player in Player.List.Where(x => x.Role.Team == team))
                 {
                     if (!player.IsAlive || player.IsGodModeEnabled)
                         continue;
@@ -105,7 +70,7 @@ namespace Surface_Tension.API
                         player.Kill("Died to radiation.");
                 }
 
-                yield return Timing.WaitForSeconds(Config.Damage.DamageInterval);
+                yield return Timing.WaitForSeconds(damage.Interval);
             }
         }
     }

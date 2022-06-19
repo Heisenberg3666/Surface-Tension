@@ -1,49 +1,49 @@
 ﻿using Exiled.API.Features;
 using System;
-using Surface_Tension.Configs;
 using Server = Exiled.Events.Handlers.Server;
 using Warhead = Exiled.Events.Handlers.Warhead;
 
 namespace Surface_Tension
 {
-    public class Plugin : Plugin<BaseConfig>
+    public class Plugin : Plugin<Config>
     {
-        public static Plugin Instance;
-        private EventHandler events;
+        private EventHandlers _events;
 
-        public override string Name => "SurfaceTension";
-        public override string Author => "Holmium67, updated by Heisenberg3666";
-        public override Version Version => new Version(2, 2, 0, 0);
-        public override Version RequiredExiledVersion => new Version(5, 1, 3);
+        public static Plugin Instance;
+
+        public override string Name { get; } =  "SurfaceTension";
+        public override string Author { get; } = "Holmium67, updated by Heisenberg3666";
+        public override Version Version { get; } = new Version(3, 0, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(5, 2, 0);
 
         public override void OnEnabled()
         {
-            base.OnEnabled();
             Instance = this;
-            events = new EventHandler();
+            _events = new EventHandlers();
             RegisterEvents();
+            base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
             UnregisterEvents();
-            events = null;
+            _events = null;
             Instance = null;
             base.OnDisabled();
         }
 
         public void RegisterEvents()
         {
-            Server.RoundStarted += events.OnRoundStart;
-            Server.EndingRound += events.OnRoundEnd;
-            Warhead.Detonated += events.OnWarheadDetonation;
+            Server.RoundStarted += _events.OnRoundStart;
+            Server.EndingRound += _events.OnRoundEnd;
+            Warhead.Detonated += _events.OnWarheadDetonation;
         }
 
         public void UnregisterEvents()
         {
-            Server.RoundStarted -= events.OnRoundStart;
-            Server.EndingRound -= events.OnRoundEnd;
-            Warhead.Detonated -= events.OnWarheadDetonation;
+            Server.RoundStarted -= _events.OnRoundStart;
+            Server.EndingRound -= _events.OnRoundEnd;
+            Warhead.Detonated -= _events.OnWarheadDetonation;
         }
     }
 }

@@ -4,7 +4,6 @@ namespace Surface_Tension.API.Entities
 {
     public class TeamDamage
     {
-        [Description("The team that this config applies to.")]
         public Team Team { get; set; }
 
         [Description("The amount of time before damage will occur.")]

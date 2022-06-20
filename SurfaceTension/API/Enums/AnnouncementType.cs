@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Surface_Tension.API.Enums
+namespace SurfaceTension.API.Enums
 {
     [Flags]
     public enum AnnouncementType

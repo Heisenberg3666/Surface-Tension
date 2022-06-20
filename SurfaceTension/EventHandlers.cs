@@ -1,11 +1,11 @@
 ﻿using Exiled.Events.EventArgs;
 using MEC;
-using Surface_Tension.API;
-using Surface_Tension.API.Entities;
+using SurfaceTension.API;
+using SurfaceTension.API.Entities;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Surface_Tension
+namespace SurfaceTension
 {
     internal class EventHandlers
     {

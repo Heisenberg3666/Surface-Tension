@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Surface_Tension.API.Entities
+namespace SurfaceTension.API.Entities
 {
     public class TeamDamage
     {

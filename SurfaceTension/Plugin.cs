@@ -3,7 +3,7 @@ using System;
 using Server = Exiled.Events.Handlers.Server;
 using Warhead = Exiled.Events.Handlers.Warhead;
 
-namespace Surface_Tension
+namespace SurfaceTension
 {
     public class Plugin : Plugin<Config>
     {

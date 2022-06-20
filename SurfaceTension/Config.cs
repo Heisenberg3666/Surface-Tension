@@ -1,10 +1,10 @@
 ﻿using Exiled.API.Interfaces;
-using Surface_Tension.API.Entities;
-using Surface_Tension.API.Enums;
+using SurfaceTension.API.Entities;
+using SurfaceTension.API.Enums;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace Surface_Tension
+namespace SurfaceTension
 {
     public class Config : IConfig
     {

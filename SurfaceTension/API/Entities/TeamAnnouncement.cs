@@ -1,6 +1,6 @@
-﻿using Surface_Tension.API.Enums;
+﻿using SurfaceTension.API.Enums;
 
-namespace Surface_Tension.API.Entities
+namespace SurfaceTension.API.Entities
 {
     public class TeamAnnouncement
     {

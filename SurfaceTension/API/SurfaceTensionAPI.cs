@@ -1,11 +1,11 @@
 ﻿using Exiled.API.Features;
 using MEC;
-using Surface_Tension.API.Entities;
-using Surface_Tension.API.Enums;
+using SurfaceTension.API.Entities;
+using SurfaceTension.API.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Surface_Tension.API
+namespace SurfaceTension.API
 {
     public class SurfaceTensionAPI
     {
